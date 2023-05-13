@@ -133,6 +133,8 @@ model OrderProduct {
   @@map("order_products")
 }
 
+// Each products has at least one variant and variant has Attributes
+
 model ProductVariant {
   id            Int           @id @default(autoincrement())
   name          String
