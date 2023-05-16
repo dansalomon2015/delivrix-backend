@@ -21,7 +21,7 @@ model Retailer {
   merchantId Int
   users User[]
   active Boolean
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
   merchant Merchant @relation(fields: [merchantId] , references: [id])
@@ -38,7 +38,7 @@ model Merchant {
   users User[]
   validated Boolean @default(false)
   active Boolean
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
   @@map("merchants")
@@ -55,7 +55,7 @@ model User {
   retailerId Int?
   lastLogin DateTime
   active Boolean
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
   merchant Merchant? @relation(fields: [merchantId] , references: [id])
@@ -80,7 +80,7 @@ model Order {
   shippingFees Float
   orderProduct OrderProduct[]
   active Boolean
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
   coupon Coupon? @relation(fields: [couponId] , references: [id])
@@ -99,7 +99,7 @@ model Transaction {
   method String
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
   payment Payment @relation(fields: [paymentId] , references: [id])
@@ -115,7 +115,7 @@ model Product {
   orderProduct OrderProduct[]
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   productVariants ProductVariant[]
@@ -145,7 +145,7 @@ model ProductVariant {
   attributes ProductAttribute[]
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   @@map("product_variants")
@@ -160,7 +160,7 @@ model ProductAttribute {
   productVariantId Int
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   productVariant       ProductVariant       @relation(fields: [productVariantId], references: [id])
@@ -174,7 +174,7 @@ model Category {
   products     Product[]
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   @@map("categories")
@@ -189,7 +189,7 @@ model Customer {
   accounts Account[]
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
   @@map("customers")
@@ -203,7 +203,7 @@ model Payment {
   transactions Transaction[]
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
   account Account @relation(fields: [accountId] , references: [id])
@@ -218,7 +218,7 @@ model Account {
   payments Payment[]
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
   customer Customer @relation(fields: [customerId] , references: [id])
@@ -229,15 +229,16 @@ model Account {
 model PaymentMethod {
   id Int @id @default(autoincrement())
   name String @db.VarChar(200) @unique
-  regex String
+  regex String @db.VarChar(200)
   logoUrl String
+  slug String @db.VarChar(200)
   accounts Account[]
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
-  @@map("paymentMethods")
+  @@map("payment_methods")
 }
 
 model Coupon {
@@ -249,7 +250,7 @@ model Coupon {
   qty Int @default(1)
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
   @@map("coupons")
@@ -261,7 +262,7 @@ model Area {
   quaters Quater[]
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
   @@map("areas")
@@ -274,7 +275,7 @@ model Quater {
   orders Order[]
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
   area Area @relation(fields: [areaId] , references: [id])
@@ -288,10 +289,10 @@ model ApiAuditLog {
   request Json
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
-  @@map("apiAuditLogs")
+  @@map("api_audit_logs")
 }
 
 model CrmAuditLog {
@@ -303,10 +304,10 @@ model CrmAuditLog {
   request Json
   active Boolean
   deleted Boolean @default(false)
-  createdBy String
+  createdBy String @db.VarChar(100) 
   createdAt DateTime @updatedAt
   updatedAt DateTime @default(now())
-  @@map("crmAuditLogs")
+  @@map("crm_audit_logs")
 }
 
 enum Privilege {
