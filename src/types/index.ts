@@ -1,0 +1,32 @@
+export enum PrivilegeType {
+    USER_PRIVILEGE = "USER_PRIVILEGE",
+    ADMIN_PRIVILEGE = "ADMIN_PRIVILEGE",
+    SUPER_PRIVILEGE = "SUPER_PRIVILEGE",
+    VIEW_USERS = "VIEW_USERS",
+    EDIT_USERS = "EDIT_USERS",
+    DELETE_USERS = "DELETE_USERS",
+    CREATE_USERS = "CREATE_USERS",
+}
+
+export enum OrderStateType {
+    INITIATED = "INITIATED",
+    ASSIGNED = "ASSIGNED",
+    UNASSIGNED = "UNASSIGNED",
+    USER_CANCELLED = "USER_CANCELLED",
+    CANCELLED = "CANCELLED",
+    REJECTED = "REJECTED",
+}
+
+export enum PaymentStatusType {
+    SUCCESS = "SUCCESS",
+    FAILED = "FAILED",
+    PENDING = "PENDING",
+    CANCELLED = "CANCELLED",
+}
+
+export enum ProductAtTributeTypeType {
+    COLOR = "COLOR",
+    VOLUME = "VOLUME",
+    SIZE = "SIZE",
+    TYPE = "TYPE",
+}
