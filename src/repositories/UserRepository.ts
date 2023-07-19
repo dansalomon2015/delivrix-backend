@@ -6,7 +6,7 @@ export class UserRepository {
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = new PrismaClient({ errorFormat: "pretty" });
     }
 
     async findAll(): Promise<UserModel[]> {
@@ -55,7 +55,7 @@ export class UserRepository {
             data: {
                 ...userData,
                 active: true,
-                lastLogin: null,
+                lastLogin: new Date(),
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },

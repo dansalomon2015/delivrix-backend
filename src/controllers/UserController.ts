@@ -1,6 +1,7 @@
-import { Request, Response } from "express";
-import { CreateUserRequestModel } from "../models";
+import { NextFunction, Request, Response } from "express";
+import { ApiResponse, CreateUserRequestModel } from "../models";
 import { UserRepository } from "../repositories/UserRepository";
+import { ApiResponseCodeType } from "../types";
 
 export class UserController {
     private userRepository: UserRepository;
@@ -9,12 +10,16 @@ export class UserController {
         this.userRepository = userRepository;
     }
 
-    public saveUser(req: Request, res: Response) {
+    public saveUser(req: Request, res: Response, next: NextFunction) {
         const userData = req.body as CreateUserRequestModel;
         // res.status(200).send(userData);
         this.userRepository
             .save(userData)
-            .then((data) => res.status(200).json(data))
-            .catch((error) => res.status(400).send(error));
+            .then((data) => {
+                let response = new ApiResponse("Success", "Success", ApiResponseCodeType.SUCCESS);
+                response.setData(data);
+                res.status(200).json(response);
+            })
+            .catch(next);
     }
 }
