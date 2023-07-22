@@ -1,6 +1,7 @@
 import { PrismaClient, User } from "@prisma/client";
 import { CreateUserRequestModel, UserModel } from "../models";
 import { UserMapper } from "../mappers";
+import bcrypt from "bcryptjs";
 
 export class UserRepository {
     private prisma: PrismaClient;
@@ -50,17 +51,60 @@ export class UserRepository {
         return user ? UserMapper.mapToUserModel(user) : null;
     }
 
+    async findByEmailWithMerchantAndRetailer(email: string): Promise<User | null> {
+        const user: User | null = await this.prisma.user.findUnique({
+            where: { email },
+            include: {
+                merchant: {
+                    select: {
+                        id: true,
+                        active: true,
+                        name: true,
+                        validated: true,
+                        email: true,
+                        phone: true,
+                        acronym: true,
+                    },
+                },
+                retailer: {
+                    select: {
+                        id: true,
+                        active: true,
+                        validated: true,
+                        email: true,
+                        phone: true,
+                        acronym: true,
+                        zone: true,
+                    },
+                },
+            },
+        });
+        return user ? user : null;
+    }
+
     async save(userData: CreateUserRequestModel): Promise<UserModel> {
+        let hashPassword = bcrypt.hashSync(userData.password, parseInt(process.env.BCRYPT_SALT!));
         const user: User = await this.prisma.user.create({
             data: {
                 ...userData,
+                password: hashPassword,
                 active: true,
-                lastLogin: new Date(),
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
         });
         return UserMapper.mapToUserModel(user);
+    }
+
+    async updateToken(email: string, token: string) {
+        await this.prisma.user.update({
+            where: {
+                email,
+            },
+            data: {
+                token,
+            },
+        });
     }
 
     async deleteById(id: number): Promise<UserModel | null> {

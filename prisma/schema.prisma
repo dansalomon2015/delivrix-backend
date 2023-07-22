@@ -14,9 +14,9 @@ model Retailer {
   zone       String
   acronym    String
   validated  Boolean
-  merchantId Int @map("merchant_id")
+  merchantId Int      @map("merchant_id")
   active     Boolean
-  createdBy  String   @db.VarChar(100) @map("created_by")
+  createdBy  String   @map("created_by") @db.VarChar(100)
   createdAt  DateTime @map("created_at")
   updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
   merchant   Merchant @relation(fields: [merchantId], references: [id])
@@ -45,17 +45,19 @@ model Merchant {
 model User {
   id         Int         @id @default(autoincrement())
   email      String      @unique @db.VarChar(200)
-  firstName  String @map("firstname")
-  lastName   String @map("lastname")
-  imageUrl   String?     @db.VarChar(200) @map("image_url")
+  firstName  String      @map("firstname")
+  lastName   String      @map("lastname")
   privileges Privilege[]
-  merchantId Int? @map("merchant_id")
-  retailerId Int? @map("retailer_id")
-  lastLogin  DateTime? @map("last_login")
+  password   String      @db.VarChar(200)
+  merchantId Int?        @map("merchant_id")
+  retailerId Int?        @map("retailer_id")
+  lastLogin  DateTime?   @map("last_login")
   active     Boolean
-  createdBy  String      @db.VarChar(100) @map("created_by")
+  createdBy  String      @map("created_by") @db.VarChar(100)
   createdAt  DateTime    @map("created_at")
   updatedAt  DateTime    @default(now()) @updatedAt @map("updated_at")
+  imageUrl   String?     @map("image_url") @db.VarChar(200)
+  token      String?     @db.VarChar(200)
   merchant   Merchant?   @relation(fields: [merchantId], references: [id])
   retailer   Retailer?   @relation(fields: [retailerId], references: [id])
 
@@ -66,20 +68,20 @@ model Order {
   id              Int            @id @default(autoincrement())
   reference       String         @unique @db.VarChar(200)
   state           OrderState
-  couponId        Int? @map("coupon_id")
-  shippingAdress  String @map("shipping_adress")
-  billingAdress   String @map("billing_adress")
-  quaterId        Int @map("quater_id")
-  customerId      Int @map("customer_id")
-  accountId       Int @map("account_id")
+  couponId        Int?           @map("coupon_id")
+  shippingAdress  String         @map("shipping_adress")
+  billingAdress   String         @map("billing_adress")
+  quaterId        Int            @map("quater_id")
+  customerId      Int            @map("customer_id")
+  accountId       Int            @map("account_id")
   paymentId       Int            @unique @map("payment_id")
   currency        String
-  subTotal        Float @map("sub_total")
-  subTotalWithTax Float @map("sub_total_with_tax")
-  shippingFees    Float @map("shipping_fees")
+  subTotal        Float          @map("sub_total")
+  subTotalWithTax Float          @map("sub_total_with_tax")
+  shippingFees    Float          @map("shipping_fees")
   active          Boolean
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
+  createdBy       String         @map("created_by") @db.VarChar(100)
+  createdAt       DateTime       @map("created_at")
   updatedAt       DateTime       @default(now()) @updatedAt @map("updated_at")
   orderProduct    OrderProduct[]
   coupon          Coupon?        @relation(fields: [couponId], references: [id])
@@ -92,15 +94,15 @@ model Order {
 
 model Transaction {
   id        Int           @id @default(autoincrement())
-  paymentId Int @map("payment_id")
+  paymentId Int           @map("payment_id")
   status    PaymentStatus
   amount    Float
   account   String
   method    String
   active    Boolean
   deleted   Boolean       @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
+  createdBy String        @map("created_by") @db.VarChar(100)
+  createdAt DateTime      @map("created_at")
   updatedAt DateTime      @default(now()) @updatedAt @map("updated_at")
   payment   Payment       @relation(fields: [paymentId], references: [id])
 
@@ -110,12 +112,12 @@ model Transaction {
 model Product {
   id              Int              @id @default(autoincrement())
   name            String
-  categoryId      Int @map("category_id")
+  categoryId      Int              @map("category_id")
   image           String?          @db.VarChar(200)
   active          Boolean
   deleted         Boolean          @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
+  createdBy       String           @map("created_by") @db.VarChar(100)
+  createdAt       DateTime         @map("created_at")
   updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
   orderProduct    OrderProduct[]
   productVariants ProductVariant[]
@@ -126,8 +128,8 @@ model Product {
 
 model OrderProduct {
   id        Int     @id @default(autoincrement())
-  orderId   Int @map("order_id")
-  productId Int @map("product_id")
+  orderId   Int     @map("order_id")
+  productId Int     @map("product_id")
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 
@@ -140,12 +142,12 @@ model ProductVariant {
   id          Int                @id @default(autoincrement())
   name        String
   price       Float
-  productId   Int @map("product_id")
+  productId   Int                @map("product_id")
   active      Boolean
   deleted     Boolean            @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy   String             @map("created_by") @db.VarChar(100)
+  createdAt   DateTime           @map("created_at")
+  updatedAt   DateTime           @default(now()) @updatedAt @map("updated_at")
   description String?            @db.VarChar(200)
   attributes  ProductAttribute[]
   product     Product            @relation(fields: [productId], references: [id])
@@ -159,12 +161,12 @@ model ProductAttribute {
   unit             String?        @db.VarChar(200)
   quantity         Int?
   priceDelta       Float          @default(0.0) @map("price_delta")
-  productVariantId Int @map("product_variant_id")
+  productVariantId Int            @map("product_variant_id")
   active           Boolean
   deleted          Boolean        @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy        String         @map("created_by") @db.VarChar(100)
+  createdAt        DateTime       @map("created_at")
+  updatedAt        DateTime       @default(now()) @updatedAt @map("updated_at")
   productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
 
   @@map("product_attributes")
@@ -176,9 +178,9 @@ model Category {
   description String?   @db.VarChar(200)
   active      Boolean
   deleted     Boolean   @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy   String    @map("created_by") @db.VarChar(100)
+  createdAt   DateTime  @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
   products    Product[]
 
   @@map("categories")
@@ -190,9 +192,9 @@ model Customer {
   email     String
   active    Boolean
   deleted   Boolean   @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy String    @map("created_by") @db.VarChar(100)
+  createdAt DateTime  @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
   accounts  Account[]
   orders    Order[]
 
@@ -201,13 +203,13 @@ model Customer {
 
 model Payment {
   id           Int           @id @default(autoincrement())
-  accountId    Int @map("account_id")
+  accountId    Int           @map("account_id")
   status       PaymentStatus
   active       Boolean
   deleted      Boolean       @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy    String        @map("created_by") @db.VarChar(100)
+  createdAt    DateTime      @map("created_at")
+  updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at")
   order        Order?
   account      Account       @relation(fields: [accountId], references: [id])
   transactions Transaction[]
@@ -218,13 +220,13 @@ model Payment {
 model Account {
   id         Int           @id @default(autoincrement())
   phone      String        @unique @db.VarChar(200)
-  customerId Int @map("customer_id")
-  methodId   Int @map("method_id")
+  customerId Int           @map("customer_id")
+  methodId   Int           @map("method_id")
   active     Boolean
   deleted    Boolean       @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy  String        @map("created_by") @db.VarChar(100)
+  createdAt  DateTime      @map("created_at")
+  updatedAt  DateTime      @default(now()) @updatedAt @map("updated_at")
   customer   Customer      @relation(fields: [customerId], references: [id])
   method     PaymentMethod @relation(fields: [methodId], references: [id])
   payments   Payment[]
@@ -236,13 +238,13 @@ model PaymentMethod {
   id        Int       @id @default(autoincrement())
   name      String    @unique @db.VarChar(200)
   regex     String    @db.VarChar(200)
-  logoUrl   String @map("logo_url")
+  logoUrl   String    @map("logo_url")
   slug      String    @db.VarChar(200)
   active    Boolean
   deleted   Boolean   @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy String    @map("created_by") @db.VarChar(100)
+  createdAt DateTime  @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
   accounts  Account[]
 
   @@map("payment_methods")
@@ -256,9 +258,9 @@ model Coupon {
   qty       Int      @default(1)
   active    Boolean
   deleted   Boolean  @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy String   @map("created_by") @db.VarChar(100)
+  createdAt DateTime @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   orders    Order[]
 
   @@map("coupons")
@@ -269,9 +271,9 @@ model Area {
   name      String   @unique @db.VarChar(200)
   active    Boolean
   deleted   Boolean  @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy String   @map("created_by") @db.VarChar(100)
+  createdAt DateTime @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   quaters   Quater[]
 
   @@map("areas")
@@ -280,12 +282,12 @@ model Area {
 model Quater {
   id        Int      @id @default(autoincrement())
   name      String   @unique @db.VarChar(200)
-  areaId    Int @map("area_id")
+  areaId    Int      @map("area_id")
   active    Boolean
   deleted   Boolean  @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy String   @map("created_by") @db.VarChar(100)
+  createdAt DateTime @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   orders    Order[]
   area      Area     @relation(fields: [areaId], references: [id])
 
@@ -299,9 +301,9 @@ model ApiAuditLog {
   request   Json
   active    Boolean
   deleted   Boolean  @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy String   @map("created_by") @db.VarChar(100)
+  createdAt DateTime @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("api_audit_logs")
 }
@@ -315,9 +317,9 @@ model CrmAuditLog {
   request   Json
   active    Boolean
   deleted   Boolean  @default(false)
-  createdBy  String      @db.VarChar(100) @map("created_by")
-  createdAt  DateTime    @map("created_at")
-  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  createdBy String   @map("created_by") @db.VarChar(100)
+  createdAt DateTime @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("crm_audit_logs")
 }

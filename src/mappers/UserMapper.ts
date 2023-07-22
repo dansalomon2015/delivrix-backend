@@ -15,6 +15,7 @@ export class UserMapper {
             lastName: user.lastName,
             updatedAt: user.updatedAt,
             imageUrl: user.imageUrl,
+            token: user.token,
             privileges: user.privileges,
         };
     }

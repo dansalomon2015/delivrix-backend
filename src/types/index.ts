@@ -37,7 +37,7 @@ export enum ApiResponseCodeType {
     ERROR = 2,
 }
 
-export enum HTTP__RESPONSE_CODES {
+export enum HTTP_RESPONSE_CODES {
     OK = 200,
     BAD_REQUEST = 400,
     UNAUTHORIZED = 401,
@@ -47,4 +47,5 @@ export enum HTTP__RESPONSE_CODES {
     INTERNAL_SERVER_ERROR = 500,
     NOT_IMPLEMENTED = 501,
     BAD_GATEWAY = 502,
+    REQUEST_CONFLICT = 409,
 }

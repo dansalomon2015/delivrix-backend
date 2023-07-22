@@ -16,7 +16,7 @@ app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/merchant", merchantRoutes);
 app.use("/api/v1/retailer", retailerRoutes);
-app.use("/api/v1transaction", transactionRoutes);
+app.use("/api/v1/transaction", transactionRoutes);
 
 app.get("/", (req, res) => {
     res.send(`App is running on port ${PORT} `);

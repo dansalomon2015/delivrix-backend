@@ -14,6 +14,7 @@ export interface UserModel {
     lastLogin: Date | null;
     active: boolean;
     createdBy: string;
+    token: string | null;
     createdAt: Date;
     updatedAt: Date;
 }
