@@ -2,17 +2,17 @@
 
 ## Stack
 
-### NodeJs
+#### NodeJs
 
-### Prisma
+#### Prisma
 
-### JWT
+#### JWT
 
-### PostgreSQL
+#### PostgreSQL
 
-### Yup
+#### Yup
 
-### Typescript
+#### Typescript
 
 ## Update credentials in .env file
 
