@@ -17,6 +17,7 @@ export class UserMapper {
             imageUrl: user.imageUrl,
             token: user.token,
             privileges: user.privileges,
+            tokenExpiryDate: user.tokenExpiryDate,
         };
     }
 

@@ -58,6 +58,7 @@ model User {
   updatedAt  DateTime    @default(now()) @updatedAt @map("updated_at")
   imageUrl   String?     @map("image_url") @db.VarChar(200)
   token      String?     @db.VarChar(200)
+  tokenExpiryDate        DateTime? @map("token_expiry_date")
   merchant   Merchant?   @relation(fields: [merchantId], references: [id])
   retailer   Retailer?   @relation(fields: [retailerId], references: [id])
 

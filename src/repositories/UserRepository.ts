@@ -2,6 +2,7 @@ import { PrismaClient, User } from "@prisma/client";
 import { CreateUserRequestModel, UserModel } from "../models";
 import { UserMapper } from "../mappers";
 import bcrypt from "bcryptjs";
+import { BCRYPT_SALT } from "../utils";
 
 export class UserRepository {
     private prisma: PrismaClient;
@@ -83,7 +84,7 @@ export class UserRepository {
     }
 
     async save(userData: CreateUserRequestModel): Promise<UserModel> {
-        let hashPassword = bcrypt.hashSync(userData.password, parseInt(process.env.BCRYPT_SALT!));
+        let hashPassword = bcrypt.hashSync(userData.password, BCRYPT_SALT);
         const user: User = await this.prisma.user.create({
             data: {
                 ...userData,
@@ -96,13 +97,14 @@ export class UserRepository {
         return UserMapper.mapToUserModel(user);
     }
 
-    async updateToken(email: string, token: string) {
+    async updateToken(email: string, token: string, tokenExpiryDate: Date) {
         await this.prisma.user.update({
             where: {
                 email,
             },
             data: {
                 token,
+                tokenExpiryDate,
             },
         });
     }

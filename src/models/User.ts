@@ -17,4 +17,5 @@ export interface UserModel {
     token: string | null;
     createdAt: Date;
     updatedAt: Date;
+    tokenExpiryDate: Date | null;
 }
