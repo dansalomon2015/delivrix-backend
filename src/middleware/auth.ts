@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { ApiResponse, JwtAccessDecoded } from "../models";
-import { HTTP_RESPONSE_CODES } from "../types";
+import { ApiResponse } from "../models";
+import { HTTP_RESPONSE_CODES, JwtAccessDecoded } from "../types";
 import { UserRepository } from "../repositories";
 import { DB_TOKEN_EXPIRY_PERIOD_IN_HOUR } from "../utils";
 

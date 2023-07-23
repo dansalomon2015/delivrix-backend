@@ -50,3 +50,8 @@ export enum HTTP_RESPONSE_CODES {
     REQUEST_CONFLICT = 409,
     UNPROCESSABLE_ENTITY = 422,
 }
+
+export interface JwtAccessDecoded {
+    id: number;
+    email: string;
+}
