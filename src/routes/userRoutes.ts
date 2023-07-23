@@ -1,17 +1,17 @@
 import { Router } from "express";
 import { UserController } from "../controllers";
 import { UserRepository } from "../repositories";
+import { accessPrivilege, auth } from "../middleware";
+import { Privilege } from "@prisma/client";
 
 const router = Router();
 
 const userRepository = new UserRepository();
-let userController = new UserController(userRepository);
+const userController = new UserController(userRepository);
 
-router.get("/", (req, res) => {
-    res.status(501).json({ error: "NotImplemented" });
-});
-
-router.post("/", userController.saveUser.bind(userController));
+router.post("/register", userController.saveUser.bind(userController));
+router.post("/me", userController.login.bind(userController));
+router.get("/", [auth, accessPrivilege([Privilege.SUPER_PRIVILEGE])], userController.getAll.bind(userController));
 
 router.get("/:id", (req, res) => {
     const { id } = req.params;

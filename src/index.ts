@@ -7,16 +7,17 @@ import retailerRoutes from "./routes/retailerRoutes";
 import transactionRoutes from "./routes/transactionRoutes";
 import { ApiResponse } from "./models";
 import { ErrorHandler } from "./utils";
+import { ApiResponseCodeType } from "./types";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
-app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/merchant", merchantRoutes);
 app.use("/api/v1/retailer", retailerRoutes);
-app.use("/api/v1transaction", transactionRoutes);
+app.use("/api/v1/transaction", transactionRoutes);
 
 app.get("/", (req, res) => {
     res.send(`App is running on port ${PORT} `);
@@ -26,15 +27,24 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-    error = ErrorHandler.process(error);
-    error.statusCode = error.statusCode || 500;
-    error.status = error.status || "error";
-    res.status(error.statusCode).json({
-        status: error.statusCode,
-        message: error.message,
-    });
+    try {
+        error = ErrorHandler.process(error);
+        error.statusCode = error.statusCode || 500;
+        error.status = error.status || "error";
+        let data = {
+            status: ApiResponseCodeType.ERROR,
+            message: error.message,
+        };
+        if (Object.prototype.hasOwnProperty.call(error, "errors")) {
+            res.status(error.statusCode).json({ ...data, errors: error.errors });
+        } else {
+            res.status(error.statusCode).json(data);
+        }
+    } catch (error) {
+        res.status(500).json({ status: error, message: "Internal server error" });
+    }
 });
 
 app.listen(PORT, () => {
-    console.log("Start listening");
+    console.log(`Start listening on port ${PORT} `);
 });

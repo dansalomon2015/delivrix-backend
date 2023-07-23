@@ -4,6 +4,7 @@ export interface CreateUserRequestModel {
     email: string;
     firstName: string;
     lastName: string;
+    password: string;
     privileges: Privilege[];
     merchantId: number | null;
     retailerId: number | null;
