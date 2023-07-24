@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ApiResponse, CreateUserRequestModel, loginUserSchema, registerUserSchema } from "../models";
+import { ApiResponse, CreateUserRequestModel, UserModel, loginUserSchema, registerUserSchema } from "../models";
 import { UserRepository } from "../repositories/UserRepository";
 import { ApiResponseCodeType, HTTP_RESPONSE_CODES } from "../types";
 import { UserMapper } from "../mappers";
@@ -25,7 +25,11 @@ export class UserController {
             this.userRepository
                 .save(userData)
                 .then((data) => {
-                    let response = new ApiResponse("Successful Operation", "Success", ApiResponseCodeType.SUCCESS);
+                    let response = new ApiResponse<UserModel, any>(
+                        "Successful Operation",
+                        "Success",
+                        ApiResponseCodeType.SUCCESS
+                    );
                     response.setData(data);
                     res.status(HTTP_RESPONSE_CODES.OK).json(response);
                 })
@@ -63,7 +67,7 @@ export class UserController {
                             )
                             .then(() => {
                                 // user
-                                let response = new ApiResponse(
+                                let response = new ApiResponse<UserModel, any>(
                                     "Successfully logged in",
                                     "Success",
                                     ApiResponseCodeType.SUCCESS

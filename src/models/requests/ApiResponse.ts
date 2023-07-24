@@ -1,11 +1,11 @@
 import { ApiResponseCodeType } from "../../types";
 
-export class ApiResponse {
+export class ApiResponse<T, R> {
     private message: string;
     private status: string;
     private statusCode: ApiResponseCodeType | number;
-    private data: any;
-    private errors: any;
+    private data: T | undefined;
+    private errors: R | undefined;
 
     constructor(message: string, status: string, statusCode: number) {
         this.message = message;
@@ -13,11 +13,11 @@ export class ApiResponse {
         this.statusCode = statusCode;
     }
 
-    public setData(data: any) {
+    public setData(data: T) {
         this.data = data;
     }
 
-    public setErrors(errors: any) {
+    public setErrors(errors: R) {
         this.errors = errors;
     }
 }
