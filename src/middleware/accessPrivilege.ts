@@ -8,11 +8,11 @@ export const accessPrivilege = (privileges: Privilege[]) => {
     const userRepository = new UserRepository();
     return async (req: Request, res: Response, next: NextFunction) => {
         let loggedUser = await userRepository.findById(req.user?.id!);
-        let hasAccess = true;
+        let hasAccess = false;
 
         privileges.forEach((privilege) => {
-            if (!loggedUser?.privileges.includes(privilege)) {
-                hasAccess = false;
+            if (loggedUser?.privileges.includes(privilege)) {
+                hasAccess = true;
             }
         });
 

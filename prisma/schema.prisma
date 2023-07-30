@@ -30,8 +30,11 @@ model Merchant {
   email     String     @unique @db.VarChar(200)
   name      String
   phone     String     @unique @db.VarChar(200)
-  acronym   String
+  location  String     @db.VarChar(500)
+  acronym   String?
   validated Boolean    @default(false)
+  validatedBy String?  @db.VarChar(200)
+  validatedAt DateTime?
   active    Boolean
   createdBy String     @db.VarChar(100)
   createdAt DateTime   @updatedAt
@@ -329,10 +332,24 @@ enum Privilege {
   USER_PRIVILEGE
   ADMIN_PRIVILEGE
   SUPER_PRIVILEGE
+  // USERS
   VIEW_USERS
   EDIT_USERS
   DELETE_USERS
   CREATE_USERS
+  // MERCHANT
+  REGISTER_MERCHANT
+  EDIT_MERCHANT
+  ACTIVATE_MERHCNAT
+  DESACTIVATE_MERCHANT
+  VIEW_MERCHANTS
+  VALIDATE_MERCHANT
+  // RETAILER
+  REGISTER_RETAILER
+  EDIT_RETAILER
+  ACTIVATE_RETAILER
+  DESACTIVATE_RETAILER
+  VIEW_RETAILERS
 }
 
 enum OrderState {

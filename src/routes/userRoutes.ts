@@ -11,12 +11,17 @@ const userController = new UserController(userRepository);
 
 router.post("/register", userController.saveUser.bind(userController));
 router.post("/me", userController.login.bind(userController));
-router.get("/", [auth, accessPrivilege([Privilege.SUPER_PRIVILEGE])], userController.getAll.bind(userController));
+router.get(
+    "/",
+    [auth, accessPrivilege([Privilege.SUPER_PRIVILEGE, Privilege.VIEW_USERS])],
+    userController.getAll.bind(userController)
+);
 
-router.get("/:id", (req, res) => {
-    const { id } = req.params;
-    res.status(501).json({ error: `NotImplemented ${id}` });
-});
+router.get(
+    "/:id",
+    [auth, accessPrivilege([Privilege.SUPER_PRIVILEGE, Privilege.VIEW_USERS])],
+    userController.getOne.bind(userController)
+);
 
 router.put("/:id", (req, res) => {
     const { id } = req.params;

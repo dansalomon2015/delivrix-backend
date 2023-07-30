@@ -1,14 +1,13 @@
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { CreateUserRequestModel, UserModel } from "../models";
 import { UserMapper } from "../mappers";
 import bcrypt from "bcryptjs";
 import { BCRYPT_SALT } from "../utils";
+import { Repository } from "./Repository";
 
-export class UserRepository {
-    private prisma: PrismaClient;
-
+export class UserRepository extends Repository {
     constructor() {
-        this.prisma = new PrismaClient({ errorFormat: "pretty" });
+        super();
     }
 
     async findAll(): Promise<UserModel[]> {
