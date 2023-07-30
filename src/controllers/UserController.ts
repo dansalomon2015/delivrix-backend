@@ -10,7 +10,7 @@ import {
 import { UserRepository } from "../repositories/UserRepository";
 import { ApiResponseCodeType, HTTP_RESPONSE_CODES } from "../types";
 import { UserMapper } from "../mappers";
-import { DB_TOKEN_EXPIRY_PERIOD_IN_HOUR } from "../utils";
+import { DATA_VALIDATION_OPTIONS, DB_TOKEN_EXPIRY_PERIOD_IN_HOUR } from "../utils";
 import { DataValidationError } from "../utils/DataValidationError";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -24,10 +24,10 @@ export class UserController {
 
     public saveUser(req: Request, res: Response, next: NextFunction) {
         try {
-            const userData = registerUserSchema.validateSync(req.body, {
-                abortEarly: false,
-                stripUnknown: true,
-            }) as unknown as CreateUserRequestModel;
+            const userData = registerUserSchema.validateSync(
+                req.body,
+                DATA_VALIDATION_OPTIONS
+            ) as unknown as CreateUserRequestModel;
 
             this.userRepository
                 .save(userData)
@@ -48,10 +48,7 @@ export class UserController {
 
     public login(req: Request, res: Response, next: NextFunction) {
         try {
-            const { email, password } = loginUserSchema.validateSync(req.body, {
-                abortEarly: false,
-                stripUnknown: true,
-            });
+            const { email, password } = loginUserSchema.validateSync(req.body, DATA_VALIDATION_OPTIONS);
 
             this.userRepository.findByEmailWithMerchantAndRetailer(email).then(async (user) => {
                 try {
