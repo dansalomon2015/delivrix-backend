@@ -19,6 +19,7 @@ model Retailer {
   createdBy  String   @map("created_by") @db.VarChar(100)
   createdAt  DateTime @map("created_at")
   updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+  modifiedBy String?  @db.VarChar(100)
   merchant   Merchant @relation(fields: [merchantId], references: [id])
   users      User[]
 
@@ -26,44 +27,46 @@ model Retailer {
 }
 
 model Merchant {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique @db.VarChar(200)
-  name      String
-  phone     String     @unique @db.VarChar(200)
-  location  String     @db.VarChar(500)
-  acronym   String?
-  validated Boolean    @default(false)
-  validatedBy String?  @db.VarChar(200)
+  id          Int        @id @default(autoincrement())
+  email       String     @unique @db.VarChar(200)
+  name        String
+  phone       String     @unique @db.VarChar(200)
+  acronym     String?
+  validated   Boolean    @default(false)
+  active      Boolean
+  createdBy   String     @db.VarChar(100)
+  createdAt   DateTime   @updatedAt
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
+  location    String     @db.VarChar(500)
   validatedAt DateTime?
-  active    Boolean
-  createdBy String     @db.VarChar(100)
-  createdAt DateTime   @updatedAt
-  updatedAt DateTime   @default(now()) @updatedAt @map("updated_at")
-  retailers Retailer[]
-  users     User[]
+  validatedBy String?    @db.VarChar(200)
+  modifiedBy  String?    @db.VarChar(100)
+  retailers   Retailer[]
+  users       User[]
 
   @@map("merchants")
 }
 
 model User {
-  id         Int         @id @default(autoincrement())
-  email      String      @unique @db.VarChar(200)
-  firstName  String      @map("firstname")
-  lastName   String      @map("lastname")
-  privileges Privilege[]
-  password   String      @db.VarChar(200)
-  merchantId Int?        @map("merchant_id")
-  retailerId Int?        @map("retailer_id")
-  lastLogin  DateTime?   @map("last_login")
-  active     Boolean
-  createdBy  String      @map("created_by") @db.VarChar(100)
-  createdAt  DateTime    @map("created_at")
-  updatedAt  DateTime    @default(now()) @updatedAt @map("updated_at")
-  imageUrl   String?     @map("image_url") @db.VarChar(200)
-  token      String?     @db.VarChar(200)
-  tokenExpiryDate        DateTime? @map("token_expiry_date")
-  merchant   Merchant?   @relation(fields: [merchantId], references: [id])
-  retailer   Retailer?   @relation(fields: [retailerId], references: [id])
+  id              Int         @id @default(autoincrement())
+  email           String      @unique @db.VarChar(200)
+  firstName       String      @map("firstname")
+  lastName        String      @map("lastname")
+  privileges      Privilege[]
+  merchantId      Int?        @map("merchant_id")
+  retailerId      Int?        @map("retailer_id")
+  lastLogin       DateTime?   @map("last_login")
+  active          Boolean
+  createdBy       String      @map("created_by") @db.VarChar(100)
+  createdAt       DateTime    @map("created_at")
+  updatedAt       DateTime    @default(now()) @updatedAt @map("updated_at")
+  imageUrl        String?     @map("image_url") @db.VarChar(200)
+  password        String      @db.VarChar(200)
+  token           String?     @db.VarChar(200)
+  tokenExpiryDate DateTime?   @map("token_expiry_date")
+  modifiedBy      String?     @db.VarChar(100)
+  merchant        Merchant?   @relation(fields: [merchantId], references: [id])
+  retailer        Retailer?   @relation(fields: [retailerId], references: [id])
 
   @@map("users")
 }
@@ -87,6 +90,7 @@ model Order {
   createdBy       String         @map("created_by") @db.VarChar(100)
   createdAt       DateTime       @map("created_at")
   updatedAt       DateTime       @default(now()) @updatedAt @map("updated_at")
+  modifiedBy      String?        @db.VarChar(100)
   orderProduct    OrderProduct[]
   coupon          Coupon?        @relation(fields: [couponId], references: [id])
   customer        Customer       @relation(fields: [customerId], references: [id])
@@ -97,18 +101,19 @@ model Order {
 }
 
 model Transaction {
-  id        Int           @id @default(autoincrement())
-  paymentId Int           @map("payment_id")
-  status    PaymentStatus
-  amount    Float
-  account   String
-  method    String
-  active    Boolean
-  deleted   Boolean       @default(false)
-  createdBy String        @map("created_by") @db.VarChar(100)
-  createdAt DateTime      @map("created_at")
-  updatedAt DateTime      @default(now()) @updatedAt @map("updated_at")
-  payment   Payment       @relation(fields: [paymentId], references: [id])
+  id         Int           @id @default(autoincrement())
+  paymentId  Int           @map("payment_id")
+  status     PaymentStatus
+  amount     Float
+  account    String
+  method     String
+  active     Boolean
+  deleted    Boolean       @default(false)
+  createdBy  String        @map("created_by") @db.VarChar(100)
+  createdAt  DateTime      @map("created_at")
+  updatedAt  DateTime      @default(now()) @updatedAt @map("updated_at")
+  modifiedBy String?       @db.VarChar(100)
+  payment    Payment       @relation(fields: [paymentId], references: [id])
 
   @@map("transactions")
 }
@@ -123,6 +128,7 @@ model Product {
   createdBy       String           @map("created_by") @db.VarChar(100)
   createdAt       DateTime         @map("created_at")
   updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  modifiedBy      String?          @db.VarChar(100)
   orderProduct    OrderProduct[]
   productVariants ProductVariant[]
   category        Category         @relation(fields: [categoryId], references: [id])
@@ -153,6 +159,7 @@ model ProductVariant {
   createdAt   DateTime           @map("created_at")
   updatedAt   DateTime           @default(now()) @updatedAt @map("updated_at")
   description String?            @db.VarChar(200)
+  modifiedBy  String?            @db.VarChar(100)
   attributes  ProductAttribute[]
   product     Product            @relation(fields: [productId], references: [id])
 
@@ -332,23 +339,20 @@ enum Privilege {
   USER_PRIVILEGE
   ADMIN_PRIVILEGE
   SUPER_PRIVILEGE
-  // USERS
   VIEW_USERS
   EDIT_USERS
   DELETE_USERS
   CREATE_USERS
-  // MERCHANT
   REGISTER_MERCHANT
   EDIT_MERCHANT
   ACTIVATE_MERHCNAT
   DESACTIVATE_MERCHANT
-  VIEW_MERCHANTS
-  VALIDATE_MERCHANT
-  // RETAILER
   REGISTER_RETAILER
   EDIT_RETAILER
   ACTIVATE_RETAILER
   DESACTIVATE_RETAILER
+  VIEW_MERCHANTS
+  VALIDATE_MERCHANT
   VIEW_RETAILERS
 }
 
