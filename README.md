@@ -1,4 +1,4 @@
-# Delivrix Backend NodeJS / TypeScript Saas
+# Delivrix Saas - Backend NodeJS / TypeScript
 
 This project is Node.js project with Typescript and Prettier.
 
