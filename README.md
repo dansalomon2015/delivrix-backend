@@ -19,8 +19,9 @@ yarn install
 
 -   Configure database
 
+Update password and username in .env file and run the following command
+
 ```bash
-Update password and username in .env file
 npx prisma migrate dev
 ```
 
