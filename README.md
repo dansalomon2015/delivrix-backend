@@ -1,6 +1,6 @@
-# Ecommerce - Delivry NodeJS / TypeScript Saas
+# Delivrix Backend NodeJS / TypeScript Saas
 
-This project contains a minimal starter for Node.js project with Typescript, ESLint and Prettier
+This project is Node.js project with Typescript and Prettier.
 
 ## Prerequisites
 
