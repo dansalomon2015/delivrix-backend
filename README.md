@@ -1,23 +1,25 @@
-# Delivrix Backend
+# Ecommerce - Delivry NodeJS / TypeScript Saas
 
-## Stack
+This project contains a minimal starter for Node.js project with Typescript, ESLint and Prettier
 
-#### NodeJs
+## Prerequisites
 
-#### Prisma
+-   Node.js 16+
+-   Yarn or NPM
 
-#### JWT
+## Installation
 
-#### PostgreSQL
+-   Install dependencies
 
-#### Yup
+```bash
+yarn install
+```
 
-#### Typescript
+-   Start Application
 
-## Update credentials in .env file
+```bash
+yarn dev
+```
 
-## Available Scripts
-
-### `yarn install`
-
-### `yarn dev`
+The application is launched by [Nodemon,](https://nodemon.com) which automatically restart the application on file
+change.
