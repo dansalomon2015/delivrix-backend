@@ -6,6 +6,8 @@ This project is Node.js project with Typescript and Prettier.
 
 -   Node.js 16+
 -   Yarn or NPM
+-   PostgreSQL
+-   Prisma 4+
 
 ## Installation
 
@@ -13,6 +15,13 @@ This project is Node.js project with Typescript and Prettier.
 
 ```bash
 yarn install
+```
+
+-   Configure database
+
+```bash
+Update password and username in .env file
+npx prisma migrate dev
 ```
 
 -   Start Application
