@@ -1,8 +1,8 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
 import { MerchantRepository } from "../repositories";
 import { MerchantController } from "../controllers/MerchantController";
-import { Privilege } from "@prisma/client";
 import { accessPrivilege, auth } from "../middleware";
+import { PrivilegeType } from "../types";
 
 const router = Router();
 
@@ -11,7 +11,7 @@ const merchantController = new MerchantController(merchantRepository);
 
 router.post(
     "/register",
-    [auth, accessPrivilege([Privilege.SUPER_PRIVILEGE, Privilege.REGISTER_MERCHANT])],
+    [auth, accessPrivilege([PrivilegeType.SUPER_PRIVILEGE, PrivilegeType.REGISTER_MERCHANT])],
     merchantController.saveMerchant.bind(merchantController)
 );
 

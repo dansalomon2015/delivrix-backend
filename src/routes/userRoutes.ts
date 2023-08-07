@@ -2,7 +2,7 @@ import { Router } from "express";
 import { UserController } from "../controllers";
 import { UserRepository } from "../repositories";
 import { accessPrivilege, auth } from "../middleware";
-import { Privilege } from "@prisma/client";
+import { PrivilegeType } from "../types";
 
 const router = Router();
 
@@ -13,13 +13,13 @@ router.post("/register", userController.saveUser.bind(userController));
 router.post("/me", userController.login.bind(userController));
 router.get(
     "/",
-    [auth, accessPrivilege([Privilege.SUPER_PRIVILEGE, Privilege.VIEW_USERS])],
+    [auth, accessPrivilege([PrivilegeType.SUPER_PRIVILEGE, PrivilegeType.VIEW_USERS])],
     userController.getAll.bind(userController)
 );
 
 router.get(
     "/:id",
-    [auth, accessPrivilege([Privilege.SUPER_PRIVILEGE, Privilege.VIEW_USERS])],
+    [auth, accessPrivilege([PrivilegeType.SUPER_PRIVILEGE, PrivilegeType.VIEW_USERS])],
     userController.getOne.bind(userController)
 );
 

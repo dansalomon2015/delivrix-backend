@@ -10,16 +10,19 @@ import {
 import { UserRepository } from "../repositories/UserRepository";
 import { ApiResponseCodeType, HTTP_RESPONSE_CODES } from "../types";
 import { UserMapper } from "../mappers";
-import { DATA_VALIDATION_OPTIONS, DB_TOKEN_EXPIRY_PERIOD_IN_HOUR } from "../utils";
+import { DATA_VALIDATION_OPTIONS } from "../utils";
 import { DataValidationError } from "../utils/DataValidationError";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { UserService } from "../service";
 
 export class UserController {
     private userRepository: UserRepository;
+    private userService: UserService;
 
     constructor(userRepository: UserRepository) {
         this.userRepository = userRepository;
+        this.userService = new UserService(userRepository);
     }
 
     public saveUser(req: Request, res: Response, next: NextFunction) {
@@ -29,8 +32,8 @@ export class UserController {
                 DATA_VALIDATION_OPTIONS
             ) as unknown as CreateUserRequestModel;
 
-            this.userRepository
-                .save(userData)
+            this.userService
+                .createUser(userData)
                 .then((data) => {
                     let response = new ApiResponse<UserModel, any>(
                         "Successful Operation",
@@ -63,12 +66,8 @@ export class UserController {
                         // save user token
                         user.token = token;
 
-                        return this.userRepository
-                            .updateToken(
-                                email,
-                                token,
-                                new Date(new Date().getTime() + DB_TOKEN_EXPIRY_PERIOD_IN_HOUR * 60 * 60 * 1000)
-                            )
+                        return this.userService
+                            .updateUserToken(email, token)
                             .then(() => {
                                 // user
                                 let response = new ApiResponse<UserModel, any>(
@@ -92,8 +91,8 @@ export class UserController {
     }
 
     public getAll(req: Request, res: Response, next: NextFunction) {
-        this.userRepository
-            .findAll()
+        this.userService
+            .getAllUsers()
             .then((users) => {
                 let response = new ApiResponse("Successful Operation", "Success", ApiResponseCodeType.SUCCESS);
                 response.setData(users);
@@ -104,8 +103,8 @@ export class UserController {
 
     public getOne(req: Request, res: Response, next: NextFunction) {
         const { id } = req.body as { id: number };
-        this.userRepository
-            .findByIdWithMerchantAndRetailer(id)
+        this.userService
+            .getFullUserDetails(id)
             .then((user) => {
                 let response = new ApiResponse("Successful Operation", "Success", ApiResponseCodeType.SUCCESS);
                 response.setData(user);

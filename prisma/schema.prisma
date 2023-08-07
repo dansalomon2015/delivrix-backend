@@ -52,7 +52,7 @@ model User {
   email           String      @unique @db.VarChar(200)
   firstName       String      @map("firstname")
   lastName        String      @map("lastname")
-  privileges      Privilege[]
+  privileges      String[]
   merchantId      Int?        @map("merchant_id")
   retailerId      Int?        @map("retailer_id")
   lastLogin       DateTime?   @map("last_login")
@@ -74,7 +74,7 @@ model User {
 model Order {
   id              Int            @id @default(autoincrement())
   reference       String         @unique @db.VarChar(200)
-  state           OrderState
+  state           String
   couponId        Int?           @map("coupon_id")
   shippingAdress  String         @map("shipping_adress")
   billingAdress   String         @map("billing_adress")
@@ -103,7 +103,7 @@ model Order {
 model Transaction {
   id         Int           @id @default(autoincrement())
   paymentId  Int           @map("payment_id")
-  status     PaymentStatus
+  status     String
   amount     Float
   account    String
   method     String
@@ -215,7 +215,7 @@ model Customer {
 model Payment {
   id           Int           @id @default(autoincrement())
   accountId    Int           @map("account_id")
-  status       PaymentStatus
+  status       String
   active       Boolean
   deleted      Boolean       @default(false)
   createdBy    String        @map("created_by") @db.VarChar(100)
@@ -333,48 +333,4 @@ model CrmAuditLog {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("crm_audit_logs")
-}
-
-enum Privilege {
-  USER_PRIVILEGE
-  ADMIN_PRIVILEGE
-  SUPER_PRIVILEGE
-  VIEW_USERS
-  EDIT_USERS
-  DELETE_USERS
-  CREATE_USERS
-  REGISTER_MERCHANT
-  EDIT_MERCHANT
-  ACTIVATE_MERHCNAT
-  DESACTIVATE_MERCHANT
-  REGISTER_RETAILER
-  EDIT_RETAILER
-  ACTIVATE_RETAILER
-  DESACTIVATE_RETAILER
-  VIEW_MERCHANTS
-  VALIDATE_MERCHANT
-  VIEW_RETAILERS
-}
-
-enum OrderState {
-  INITIATED
-  ASSIGNED
-  UNASSIGNED
-  USER_CANCELLED
-  CANCELLED
-  REJECTED
-}
-
-enum PaymentStatus {
-  SUCCESS
-  FAILED
-  PENDING
-  CANCELLED
-}
-
-enum ProductAttributeType {
-  COLOR
-  VOLUME
-  SIZE
-  TYPE
 }
