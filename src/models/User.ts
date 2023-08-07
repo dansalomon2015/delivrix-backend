@@ -1,4 +1,3 @@
-import { Privilege } from "@prisma/client";
 import { MerchantModel } from "./Merchant";
 import { RetailerModel } from "./Retailer";
 
@@ -8,7 +7,7 @@ export interface UserModel {
     firstName: string;
     lastName: string;
     imageUrl?: string | null;
-    privileges: Privilege[];
+    privileges: String[];
     merchant?: MerchantModel;
     retailer?: RetailerModel;
     lastLogin: Date | null;

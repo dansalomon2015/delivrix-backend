@@ -19,4 +19,11 @@ export class RetailerRepository extends Repository {
         });
         return retailers;
     }
+
+    async toggleRetailer(id: number, active: boolean) {
+        await this.prisma.retailer.update({
+            where: { id },
+            data: { active },
+        });
+    }
 }
