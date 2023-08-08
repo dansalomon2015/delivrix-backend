@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { UserController } from "../controllers";
 import { UserRepository } from "../repositories";
-import { accessPrivilege, auth } from "../middleware";
+import { accessPrivilege } from "../middleware";
 import { PrivilegeType } from "../types";
 
 const router = Router();
@@ -13,13 +13,13 @@ router.post("/register", userController.saveUser.bind(userController));
 router.post("/me", userController.login.bind(userController));
 router.get(
     "/",
-    [auth, accessPrivilege([PrivilegeType.SUPER_PRIVILEGE, PrivilegeType.VIEW_USERS])],
+    [accessPrivilege([PrivilegeType.SUPER_PRIVILEGE, PrivilegeType.VIEW_USERS])],
     userController.getAll.bind(userController)
 );
 
 router.get(
     "/:id",
-    [auth, accessPrivilege([PrivilegeType.SUPER_PRIVILEGE, PrivilegeType.VIEW_USERS])],
+    [accessPrivilege([PrivilegeType.SUPER_PRIVILEGE, PrivilegeType.VIEW_USERS])],
     userController.getOne.bind(userController)
 );
 
