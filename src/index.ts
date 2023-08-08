@@ -10,9 +10,12 @@ import { ErrorHandler } from "./utils";
 import { ApiResponseCodeType } from "./types";
 import { auth } from "./middleware";
 import { auditLog } from "./middleware/auditLog";
+import { PrismaClient } from "@prisma/client";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
+const prisma = new PrismaClient();
+
 app.use(express.json());
 
 app.use(auth);
@@ -50,6 +53,10 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     } catch (error) {
         res.status(500).json({ status: error, message: "Internal server error" });
     }
+});
+
+process.on("beforeExit", async () => {
+    await prisma.$disconnect();
 });
 
 app.listen(PORT, () => {
