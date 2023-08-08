@@ -11,7 +11,7 @@ const merchantController = new MerchantController(merchantRepository);
 
 router.post(
     "/register",
-    [auth, accessPrivilege([PrivilegeType.SUPER_PRIVILEGE, PrivilegeType.REGISTER_MERCHANT])],
+    [accessPrivilege([PrivilegeType.SUPER_PRIVILEGE, PrivilegeType.REGISTER_MERCHANT])],
     merchantController.saveMerchant.bind(merchantController)
 );
 

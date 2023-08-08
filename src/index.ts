@@ -8,10 +8,16 @@ import transactionRoutes from "./routes/transactionRoutes";
 import { ApiResponse } from "./models";
 import { ErrorHandler } from "./utils";
 import { ApiResponseCodeType } from "./types";
+import { auth } from "./middleware";
+import { auditLog } from "./middleware/auditLog";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
+
+app.use(auth);
+app.use(auditLog);
+
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/order", orderRoutes);
@@ -22,6 +28,7 @@ app.use("/api/v1/transaction", transactionRoutes);
 app.get("/", (req, res) => {
     res.send(`App is running on port ${PORT} `);
 });
+
 app.all("*", (req, res, next) => {
     next(new ApiResponse(`Can't find ${req.originalUrl} on the server`, "fail", 404));
 });
