@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import userRoutes from "./routes/userRoutes";
 import productRoutes from "./routes/productRoutes";
 import orderRoutes from "./routes/orderRoutes";
@@ -6,9 +6,7 @@ import merchantRoutes from "./routes/merchantRoutes";
 import retailerRoutes from "./routes/retailerRoutes";
 import transactionRoutes from "./routes/transactionRoutes";
 import { ApiResponse } from "./models";
-import { ErrorHandler } from "./utils";
-import { ApiResponseCodeType } from "./types";
-import { auth } from "./middleware";
+import { auth, globalErrorHandler } from "./middleware";
 import { auditLog } from "./middleware/auditLog";
 import { PrismaClient } from "@prisma/client";
 
@@ -36,24 +34,7 @@ app.all("*", (req, res, next) => {
     next(new ApiResponse(`Can't find ${req.originalUrl} on the server`, "fail", 404));
 });
 
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-    try {
-        error = ErrorHandler.process(error);
-        error.statusCode = error.statusCode || 500;
-        error.status = error.status || "error";
-        let data = {
-            status: ApiResponseCodeType.ERROR,
-            message: error.message,
-        };
-        if (Object.prototype.hasOwnProperty.call(error, "errors")) {
-            res.status(error.statusCode).json({ ...data, errors: error.errors });
-        } else {
-            res.status(error.statusCode).json(data);
-        }
-    } catch (error) {
-        res.status(500).json({ status: error, message: "Internal server error" });
-    }
-});
+app.use(globalErrorHandler);
 
 process.on("beforeExit", async () => {
     await prisma.$disconnect();
